@@ -183,12 +183,34 @@ var vm = new Vue({
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
+          method: 'POST',
           sheet: "Users",
-          user: "komarov@gamefjord.com"
+          userEmail: "komarov@gamefjord.com"
         }),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" } })
+        credentials: 'include',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        //mode: 'cors'
+        //key: "anonymous"
+      })
+      return response;
       }
     }
 });
-vm.submit();
+vm.submit().then(function(response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function(json) {
+      console.log(json);
+    })
+    .catch(function (error) {
+      console.log('Request failed', error);
+    });
+
+
+
+
+
+
+
 //Particles.init();
