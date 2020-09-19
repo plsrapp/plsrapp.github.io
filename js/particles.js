@@ -173,4 +173,22 @@ else
 console.log(c);
 
 
+const url = "https://script.google.com/macros/s/AKfycbz21sm0LgTXTpQerLTbapxQXgP0zCDklewGQ5B2v--hLhn8LK-G/exec";
+
+var vm = new Vue({
+  methods: {
+    async submit() {
+
+      // Sample request to the SpreadAPI
+      const response = await fetch(url, {
+        method: 'UPDATELESSON',
+        body: JSON.stringify({
+          sheet: "Users",
+          user: "komarov@gamefjord.com"
+        }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" } })
+      }
+    }
+});
+vm.submit();
 //Particles.init();
