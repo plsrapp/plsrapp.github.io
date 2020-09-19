@@ -181,7 +181,7 @@ var vm = new Vue({
 
       // Sample request to the SpreadAPI
       const response = await fetch(url, {
-        method: 'UPDATELESSON',
+        method: 'POST',
         body: JSON.stringify({
           sheet: "Users",
           user: "komarov@gamefjord.com"
