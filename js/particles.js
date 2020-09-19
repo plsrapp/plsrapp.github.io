@@ -4,13 +4,13 @@ var Particles = (function(document, window) {
 
   var c = document.getElementById('particles');
   var ctx = c.getContext('2d'),
-    fps = 24,
-    pointer = {
-      x: (window.innerWidth / 2),
-      y: (window.innerHeight / 2)
-    },
-    particles = [];
-  
+      fps = 24,
+      pointer = {
+        x: (window.innerWidth / 2),
+        y: (window.innerHeight / 2)
+      },
+      particles = [];
+
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -76,4 +76,101 @@ var Particles = (function(document, window) {
   };
 
 } )(document, window);
-Particles.init();
+
+var getParams = function (url) {
+  var params = {};
+  var parser = document.createElement('a');
+  parser.href = url;
+  var query = parser.search.substring(1);
+  var vars = query.split('&');
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split('=');
+    params[pair[0]] = decodeURIComponent(pair[1]);
+  }
+  return params;
+};
+
+
+var canvas;
+var touchmovectx;
+var touchmovezone=null;
+var lastPt=null;
+
+function init() {
+  touchmovezone = document.getElementById("mycanvas");
+  touchmovezone.addEventListener("touchmove", drawtouchmove, false);
+  touchmovezone.addEventListener("touchend", endtouchmove, false);
+
+  touchmovezone.addEventListener("mousedown", function() {
+        touchmovezone.addEventListener("mousemove", drawmousemove, false);
+      }
+      , false);
+  touchmovezone.addEventListener("mouseup", endmousemove, false);
+  touchmovectx = touchmovezone.getContext("2d");
+}
+
+
+function drawtouchmove(e) {
+  e.preventDefault();
+  var offset  = getOffset(touchmovezone);
+  if(lastPt!=null) {
+    touchmovectx.beginPath();
+    touchmovectx.moveTo(lastPt.x-offset.left, lastPt.y-offset.top);
+    touchmovectx.lineTo(e.touches[0].pageX-offset.left, e.touches[0].pageY-offset.top);
+    touchmovectx.strokeStyle = 'purple';
+    touchmovectx.lineWidth = 3;
+    touchmovectx.stroke();
+  }
+  lastPt = {x:e.touches[0].pageX, y:e.touches[0].pageY};
+}
+
+
+function drawmousemove(e) {
+
+  e.preventDefault();
+  var offset  = getOffset(touchmovezone);
+  if(lastPt!=null) {
+    touchmovectx.beginPath();
+    touchmovectx.moveTo(lastPt.x-offset.left, lastPt.y-offset.top);
+    touchmovectx.lineTo(e.pageX-offset.left, e.pageY-offset.top);
+    touchmovectx.strokeStyle = 'purple';
+    touchmovectx.lineWidth = 3;
+    touchmovectx.stroke();
+  }
+  lastPt = {x:e.pageX, y:e.pageY};
+}
+
+function endtouchmove(e) {
+  e.preventDefault();
+  lastPt = null;
+}
+
+function endmousemove(e) {
+  e.preventDefault();
+  touchmovezone.removeEventListener("mousemove", drawmousemove, false);
+  lastPt = null;
+}
+
+function getOffset(obj) {
+  var offsetLeft = 0;
+  var offsetTop = 0;
+  do {
+    if (!isNaN(obj.offsetLeft)) {
+      offsetLeft += obj.offsetLeft;
+    }
+    if (!isNaN(obj.offsetTop)) {
+      offsetTop += obj.offsetTop;
+    }
+  } while(obj = obj.offsetParent );
+  return {left: offsetLeft, top: offsetTop};
+}
+
+var c = getParams(window.location.href);
+if(c['type']!=null & c['type']== 'particles')
+  Particles.init();
+else
+  init();
+console.log(c);
+
+
+//Particles.init();
