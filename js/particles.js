@@ -166,7 +166,7 @@ function getOffset(obj) {
 }
 
 var c = getParams(window.location.href);
-if(c['type']!=null & c['type']== 'particles')
+if(c['type']!=null & c['type']== 0)
   Particles.init();
 else
   init();
@@ -183,14 +183,10 @@ var vm = new Vue({
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          method: 'POST',
-          sheet: "Users",
+          method: 'UPDATELESSON',
+          sheet: "users",
           userEmail: "komarov@gamefjord.com"
         }),
-        credentials: 'include',
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-        //mode: 'cors'
-        //key: "anonymous"
       })
       return response;
       }
