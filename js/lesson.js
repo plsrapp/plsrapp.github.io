@@ -3,7 +3,7 @@ let bg;
 let canvasSize;
 
 let mousePositions = [];
-let trailLength = 50;
+const trailMaxLength = 50;
 
 let isTouchProceeding = false;
 let isLessonCompleted = false;
@@ -147,26 +147,18 @@ function drawTrail(){
   noStroke();
   fill('#fae');
   if(isTouchProceeding) {
-    //how you're drawing your pose
-
     heart(mouseX, mouseY, 50);
     //ellipse(mouseX, mouseY, 50, 50);
 
-    //how you're storing the last 50 poses
     mousePositions.push({x: mouseX, y: mouseY});
-    trailLength = 50;
   }
-  else if(trailLength>0)
-    trailLength--;
 
-  //removes poses that are older than 50
-  if (mousePositions.length > trailLength) {
+  //removes poses that are older than trailMaxLength
+  if (mousePositions.length > trailMaxLength || !isTouchProceeding) {
     mousePositions.shift();
   }
   for (let i = 0; i < mousePositions.length; i +=1) {
-    // how you want to draw the previous poses
-    // relate it to i to change pose drawing over time
-    heart(mousePositions[i].x, mousePositions[i].y, i);
+    heart(mousePositions[i].x, mousePositions[i].y, i*trailMaxLength/mousePositions.length);
     //ellipse(mousePositions[i].x, mousePositions[i].y, i, i);
   }
 }
