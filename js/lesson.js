@@ -1,6 +1,13 @@
+const url = "https://script.google.com/macros/s/AKfycbz21sm0LgTXTpQerLTbapxQXgP0zCDklewGQ5B2v--hLhn8LK-G/exec";
 let arr = [];
 let bg;
 let canvasSize;
+let params;
+
+let showGrid = true;
+
+let exponent = 4; // Determines the curve
+let step = 0.03; // Size of each step along the path
 
 let mousePositions = [];
 const trailMaxLength = 50;
@@ -11,14 +18,19 @@ let isLessonCompleted = false;
 let currentLesson = 1;
 let currentPath = [];
 let lessonPath = {
-  1: { 1: {points: [14,33,53,74], isCompleted: false}, 2: {points: [16,37,57,76], isCompleted: false}},
-  2: { 1: {points: [], isCompleted: false}, 2: {points: [], isCompleted: false}},
-  3: { 1: {points: [], isCompleted: false}, 2: {points: [], isCompleted: false}}
+  1: { 1: {points: [14,33,53,74], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [16,37,57,76], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  2: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  3: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}}
 }
 
 
 function preload() {
-  bg = loadImage("images/logo.png");
+  params = getParams(window.location.href);
+  currentLesson = params['lesson'] != null ? params['lesson'] : 1;
+  bg = loadImage("images/lesson"+currentLesson+".png");
 }
 
 function setup() {
@@ -30,6 +42,15 @@ function setup() {
 
   for(let i =0; i<100; i++){
     arr.push(i);
+  }
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      let xpos = x *canvasSize.x/10 + canvasSize.x/20;
+      let ypos = y *canvasSize.y/10 + canvasSize.y/20;
+
+      let index = y * 10 + x; // find the index
+      arr[index] = [xpos, ypos];
+    }
   }
 }
 
@@ -58,34 +79,19 @@ function mouseReleased() {
 
 function draw() {
   background(bg);
-  textAlign(CENTER, CENTER);
 
+  if(showGrid)
+    drawGrid();
 
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let xpos = x *canvasSize.x/10;
-      let ypos = y *canvasSize.y/10;
-
-      let index = y * 10 + x; // find the index
-      fill(255,0);
-      stroke(0);
-      rect(xpos, ypos, canvasSize.x/10, canvasSize.y/10);
-
-      // colorMode(HSB);
-      //let h = map(index, 0, 69, 0, 0);
-      fill(0);
-      noStroke();
-      text(arr[index], xpos, ypos, canvasSize.x/10, canvasSize.y/10);
-    }
-  }
-  // colorMode(RGB);
-  colorMode(RGB);
-  stroke(0);
+  drawHints();
 
   drawTrail();
 }
 
 function checkPath() {
+  if(isLessonCompleted)
+    return;
+
   for (let y = 0; y < 10; y++) {
     for (let x = 0; x < 10; x++) {
       let xpos = x * canvasSize.x / 10;
@@ -124,6 +130,7 @@ function checkPath() {
         if(completedPathesNum === Object.values(lessonPath[currentLesson]).length)
         {
           isLessonCompleted = true;
+          completeLesson();
         }
         break;
       } else
@@ -133,6 +140,20 @@ function checkPath() {
   }
   //console.log(currentPath);
 }
+
+function completeLesson() {
+  vm.submit().then(function(response) {
+    //console.log(response);
+    return response.json();
+  })
+      .then(function(json) {
+        //console.log(json);
+      })
+      .catch(function (error) {
+        console.log('Request failed', error);
+      });
+}
+
 
 
 function inside(x, y, w, h){
@@ -162,6 +183,64 @@ function drawTrail(){
     //ellipse(mousePositions[i].x, mousePositions[i].y, i, i);
   }
 }
+function drawGrid(){
+  textAlign(CENTER, CENTER);
+
+  for (let y = 0; y < 10; y++) {
+    for (let x = 0; x < 10; x++) {
+      let xpos = x *canvasSize.x/10;
+      let ypos = y *canvasSize.y/10;
+
+      let index = y * 10 + x; // find the index
+      fill(255,0);
+      stroke(0);
+      rect(xpos, ypos, canvasSize.x/10, canvasSize.y/10);
+
+      // colorMode(HSB);
+      //let h = map(index, 0, 69, 0, 0);
+      fill(0);
+      noStroke();
+      text(index, xpos, ypos, canvasSize.x/10, canvasSize.y/10);
+    }
+  }
+  // colorMode(RGB);
+  colorMode(RGB);
+  stroke(0);
+}
+
+function drawHints(){
+  noStroke();
+  fill('#afb');
+  Object.values(lessonPath[currentLesson]).forEach(function(path) {
+    if(!path.isCompleted & path.points.length > 0)
+    {
+      var x = 0.0;
+      var y = 0.0;
+      path.pct += step;
+      if (path.pct < 1.0) {
+        var beginPoint = arr[path.points[path.hintStep-1]];
+        var endPoint = arr[path.points[path.hintStep]];
+        path.distX = endPoint[0] - beginPoint[0];
+        path.distY = endPoint[1] - beginPoint[1];
+        x = beginPoint[0] + path.pct * path.distX;
+        //y = beginPoint[1] + pow(path.pct, exponent) * path.distY;
+        y = beginPoint[1] + path.pct * path.distY;
+      }
+      else
+      {
+        path.pct = 0.0;
+        path.hintStep = path.hintStep == path.points.length-1 ? 1 : path.hintStep+1;
+        var beginPoint = arr[path.points[path.hintStep-1]];
+        var endPoint = arr[path.points[path.hintStep]];
+        path.distX = endPoint[0] - beginPoint[0];
+        path.distY = endPoint[1] - beginPoint[1];
+        x = beginPoint[0];
+        y = beginPoint[1];
+      }
+      ellipse(x, y, 20, 20);
+    }
+  });
+}
 
 function heart(x, y, size) {
   beginShape();
@@ -170,3 +249,34 @@ function heart(x, y, size) {
   bezierVertex(x + size, y + size / 3, x + size / 2, y - size / 2, x, y);
   endShape(CLOSE);
 }
+
+function getParams(url) {
+  var params = {};
+  var parser = document.createElement('a');
+  parser.href = url;
+  var query = parser.search.substring(1);
+  var vars = query.split('&');
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split('=');
+    params[pair[0]] = decodeURIComponent(pair[1]);
+  }
+  return params;
+}
+
+var vm = new Vue({
+  methods: {
+    async submit() {
+
+      // Sample request to the SpreadAPI
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          method: 'UPDATELESSON',
+          sheet: "users",
+          userEmail: params['email'] != null ? params['email'] : "no_email"
+        }),
+      })
+      return response;
+    }
+  }
+});
