@@ -5,7 +5,7 @@ let canvasSize;
 let params;
 
 let showGrid = true;
-let gridSize = [5,5, 25];
+let gridSize = [7,7, 49];
 
 let exponent = 4; // Determines the curve
 let step = 0.03; // Size of each step along the path
@@ -19,8 +19,8 @@ let isLessonCompleted = false;
 let currentLesson = 1;
 let currentPath = [];
 let lessonPath = {
-  1: { 1: {points: [7,11,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
-       2: {points: [7,13,18], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  1: { 1: {points: [10,16,24, 32, 38, 30, 24, 18, 10], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+       //2: {points: [7,13,18], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   2: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
        2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   3: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
