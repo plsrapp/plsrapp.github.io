@@ -5,6 +5,7 @@ let canvasSize;
 let params;
 
 let showGrid = true;
+let gridSize = [5,5, 25];
 
 let exponent = 4; // Determines the curve
 let step = 0.03; // Size of each step along the path
@@ -18,8 +19,8 @@ let isLessonCompleted = false;
 let currentLesson = 1;
 let currentPath = [];
 let lessonPath = {
-  1: { 1: {points: [14,33,53,74], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
-       2: {points: [16,37,57,76], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  1: { 1: {points: [7,11,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [7,13,18], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   2: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
        2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   3: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
@@ -30,7 +31,7 @@ let lessonPath = {
 function preload() {
   params = getParams(window.location.href);
   currentLesson = params['lesson'] != null ? params['lesson'] : 1;
-  bg = loadImage("images/lesson"+currentLesson+".png");
+  bg = loadImage("images/lesson"+currentLesson+".jpg");
 }
 
 function setup() {
@@ -40,15 +41,15 @@ function setup() {
   strokeWeight(10);
   stroke(0);
 
-  for(let i =0; i<100; i++){
+  for(let i =0; i<gridSize[2]; i++){
     arr.push(i);
   }
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let xpos = x *canvasSize.x/10 + canvasSize.x/20;
-      let ypos = y *canvasSize.y/10 + canvasSize.y/20;
+  for (let y = 0; y < gridSize[1]; y++) {
+    for (let x = 0; x < gridSize[0]; x++) {
+      let xpos = x *canvasSize.x/gridSize[0] + canvasSize.x/gridSize[0]/2;
+      let ypos = y *canvasSize.y/gridSize[1] + canvasSize.y/gridSize[1]/2;
 
-      let index = y * 10 + x; // find the index
+      let index = y * gridSize[0] + x; // find the index
       arr[index] = [xpos, ypos];
     }
   }
@@ -92,14 +93,14 @@ function checkPath() {
   if(isLessonCompleted)
     return;
 
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let xpos = x * canvasSize.x / 10;
-      let ypos = y * canvasSize.y / 10;
+  for (let y = 0; y < gridSize[1]; y++) {
+    for (let x = 0; x < gridSize[0]; x++) {
+      let xpos = x * canvasSize.x / gridSize[0];
+      let ypos = y * canvasSize.y / gridSize[1];
 
-      let index = y * 10 + x; // find the index
+      let index = y * gridSize[0] + x; // find the index
 
-      if (inside(xpos, ypos, canvasSize.x / 10, canvasSize.y / 10)) {
+      if (inside(xpos, ypos, canvasSize.x / gridSize[0], canvasSize.y / gridSize[1])) {
         if(!currentPath.includes(index))
           currentPath.push(index);
 
@@ -186,21 +187,21 @@ function drawTrail(){
 function drawGrid(){
   textAlign(CENTER, CENTER);
 
-  for (let y = 0; y < 10; y++) {
-    for (let x = 0; x < 10; x++) {
-      let xpos = x *canvasSize.x/10;
-      let ypos = y *canvasSize.y/10;
+  for (let y = 0; y < gridSize[1]; y++) {
+    for (let x = 0; x < gridSize[0]; x++) {
+      let xpos = x *canvasSize.x/gridSize[0];
+      let ypos = y *canvasSize.y/gridSize[1];
 
-      let index = y * 10 + x; // find the index
+      let index = y * gridSize[0] + x; // find the index
       fill(255,0);
       stroke(0);
-      rect(xpos, ypos, canvasSize.x/10, canvasSize.y/10);
+      rect(xpos, ypos, canvasSize.x/gridSize[0], canvasSize.y/gridSize[1]);
 
       // colorMode(HSB);
       //let h = map(index, 0, 69, 0, 0);
       fill(0);
       noStroke();
-      text(index, xpos, ypos, canvasSize.x/10, canvasSize.y/10);
+      text(index, xpos, ypos, canvasSize.x/gridSize[0], canvasSize.y/gridSize[1]);
     }
   }
   // colorMode(RGB);
@@ -237,7 +238,7 @@ function drawHints(){
         x = beginPoint[0];
         y = beginPoint[1];
       }
-      ellipse(x, y, 20, 20);
+      ellipse(x, y, 50, 50);
     }
   });
 }
