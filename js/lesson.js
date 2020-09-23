@@ -4,7 +4,7 @@ let bg;
 let canvasSize;
 let params;
 
-let showGrid = true;
+let showGrid = false;
 let gridSize = [7,7, 49];
 
 let exponent = 4; // Determines the curve
@@ -29,8 +29,8 @@ let lessonPath = {
        //2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   5: { 1: {points: [16,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
        2: {points: [18,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
-  6: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
-       2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  6: { 1: {points: [29,22,14], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [33,26,20], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   7: { 1: {points: [9,15,22,29], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
        2: {points: [11,19,26,33], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
   8: { 1: {points: [22,16,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
