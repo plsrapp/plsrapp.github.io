@@ -21,11 +21,23 @@ let currentPath = [];
 let lessonPath = {
   1: { 1: {points: [10,16,24, 32, 38, 30, 24, 18, 10], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
        //2: {points: [7,13,18], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
-  2: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+  2: { 1: {points: [10,16,17,18,10], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [3,9,15,23,24,25,19,11,3], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  3: { 1: {points: [10,16,23,31], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [10,18,25,31], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  4: { 1: {points: [10,16,23,30,31,25,18,10], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+       //2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  5: { 1: {points: [16,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [18,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  6: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
        2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
-  3: { 1: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
-       2: {points: [], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}}
-}
+  7: { 1: {points: [9,15,22,29], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [11,19,26,33], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  8: { 1: {points: [22,16,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [26,18,17], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}},
+  9: { 1: {points: [23,16,17,18], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0},
+       2: {points: [25,18,17,16], isCompleted: false, hintStep: 0, pct: 1.0, distX: 0, distY: 0}}
+};
 
 
 function preload() {
